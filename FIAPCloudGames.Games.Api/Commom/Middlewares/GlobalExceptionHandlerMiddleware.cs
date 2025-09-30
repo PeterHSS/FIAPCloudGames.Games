@@ -3,7 +3,7 @@ using Serilog;
 
 namespace FIAPCloudGames.Games.Api.Commom.Middlewares;
 
-internal sealed class GlobalExceptionHandler(IProblemDetailsService problemDetailsService) : IExceptionHandler
+internal sealed class GlobalExceptionHandlerMiddleware(IProblemDetailsService problemDetailsService) : IExceptionHandler
 {
     public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
     {

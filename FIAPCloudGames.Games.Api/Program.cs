@@ -12,10 +12,9 @@ builder.Services.AddProblemDetails(configure =>
     };
 });
 
-builder.Services.AddExceptionHandler<ValidationExceptionHandler>();
+builder.Services.AddExceptionHandler<ValidationExceptionHandlerMiddleware>();
 
-builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
-
+builder.Services.AddExceptionHandler<GlobalExceptionHandlerMiddleware>();
 
 builder.Services
     .AddApplication()
@@ -39,6 +38,8 @@ if (app.Environment.IsDevelopment())
 
     app.ApplyMigrations();
 }
+
+app.UseMiddleware<RequestLogContextMiddleware>();
 
 app.UseExceptionHandler();
 
