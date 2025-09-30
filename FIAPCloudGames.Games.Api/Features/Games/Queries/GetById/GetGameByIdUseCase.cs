@@ -1,7 +1,5 @@
-﻿using FIAPCloudGames.Games.Api.Features.Games.Queries;
+﻿using FIAPCloudGames.Games.Api.Features.Games.Models;
 using FIAPCloudGames.Games.Api.Features.Games.Repositories;
-using FIAPCloudGames.Games.Domain.Abstractions.Repositories;
-using FIAPCloudGames.Games.Domain.Entities;
 using Serilog;
 
 namespace FIAPCloudGames.Games.Api.Features.Games.Queries.GetById;

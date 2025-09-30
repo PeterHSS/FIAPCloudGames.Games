@@ -1,7 +1,6 @@
 ﻿using System.Data;
 using FIAPCloudGames.Games.Api.Commom.Interfaces;
 using FIAPCloudGames.Games.Api.Infrastructure.Persistence.Context;
-using FIAPCloudGames.Games.Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace FIAPCloudGames.Games.Api.Infrastructure.Persistence.Repositories;

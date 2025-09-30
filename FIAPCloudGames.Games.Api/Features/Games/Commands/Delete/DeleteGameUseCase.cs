@@ -1,6 +1,6 @@
-﻿using FIAPCloudGames.Games.Api.Features.Games.Models;
+﻿using FIAPCloudGames.Games.Api.Commom.Interfaces;
+using FIAPCloudGames.Games.Api.Features.Games.Models;
 using FIAPCloudGames.Games.Api.Features.Games.Repositories;
-using FIAPCloudGames.Games.Domain.Abstractions.Repositories;
 using Serilog;
 
 namespace FIAPCloudGames.Games.Api.Features.Games.Commands.Delete;
@@ -31,10 +31,10 @@ public sealed class DeleteGameUseCase
 
         game.Delete();
 
-        _gameRepository.Update(game, cancellationToken);
+        _gameRepository.Update(game);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        Log.Information("Game with ID {GameId} deleted successfully", id);
+         Log.Information("Game with ID {GameId} deleted successfully", id);
     }
 }

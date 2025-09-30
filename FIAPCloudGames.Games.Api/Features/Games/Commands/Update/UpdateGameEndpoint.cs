@@ -1,5 +1,5 @@
 ﻿using Carter;
-using FIAPCloudGames.Games.Api.Endpoints;
+using FIAPCloudGames.Games.Api.Commom;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,7 +11,7 @@ public sealed class
     public void AddRoutes(IEndpointRouteBuilder app)
     {
         app.MapPut("/games/{id:guid}",
-            async ([FromQuery] Guid id,
+            async ([FromRoute] Guid id,
                    [FromBody] UpdateGameRequest request,
                    [FromServices] UpdateGameUseCase useCase,
                    [FromServices] IValidator<UpdateGameRequest> validator,

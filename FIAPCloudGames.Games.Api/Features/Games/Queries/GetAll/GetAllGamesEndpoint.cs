@@ -1,5 +1,5 @@
 ﻿using Carter;
-using FIAPCloudGames.Games.Api.Endpoints;
+using FIAPCloudGames.Games.Api.Commom;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FIAPCloudGames.Games.Api.Features.Games.Queries.GetAll;

@@ -1,9 +1,11 @@
 ﻿using Carter;
-using FIAPCloudGames.Games.Api.Endpoints;
+using FIAPCloudGames.Games.Api.Commom;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FIAPCloudGames.Games.Api.Features.Games.Commands.Create;
+
+public sealed class CreateGameEndpoint : ICarterModule
 
 {
     public void AddRoutes(IEndpointRouteBuilder app)

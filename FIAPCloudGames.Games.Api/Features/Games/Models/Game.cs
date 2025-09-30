@@ -1,6 +1,4 @@
-﻿using FIAPCloudGames.Games.Api.Features.Games.Models.Base;
-
-namespace FIAPCloudGames.Games.Api.Features.Games.Models;
+﻿namespace FIAPCloudGames.Games.Api.Features.Games.Models;
 
 public class Game 
 {

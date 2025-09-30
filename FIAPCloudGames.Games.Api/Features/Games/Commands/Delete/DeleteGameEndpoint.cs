@@ -1,5 +1,5 @@
 ﻿using Carter;
-using FIAPCloudGames.Games.Api.Endpoints;
+using FIAPCloudGames.Games.Api.Commom;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FIAPCloudGames.Games.Api.Features.Games.Commands.Delete;
@@ -9,7 +9,7 @@ public sealed class DeleteGameEndpoint : ICarterModule
     public void AddRoutes(IEndpointRouteBuilder app)
     {
         app.MapDelete("games/{id:guid}",
-            async ([FromQuery] Guid id,
+            async ([FromRoute] Guid id,
                    [FromServices] DeleteGameUseCase useCase,
                    CancellationToken cancellationToken) =>
             {

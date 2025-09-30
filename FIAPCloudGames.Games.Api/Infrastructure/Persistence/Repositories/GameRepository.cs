@@ -1,8 +1,6 @@
 ﻿using FIAPCloudGames.Games.Api.Features.Games.Models;
 using FIAPCloudGames.Games.Api.Features.Games.Repositories;
 using FIAPCloudGames.Games.Api.Infrastructure.Persistence.Context;
-using FIAPCloudGames.Games.Domain.Abstractions.Repositories;
-using FIAPCloudGames.Games.Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 
 namespace FIAPCloudGames.Games.Api.Infrastructure.Persistence.Repositories;

@@ -3,11 +3,14 @@ using FIAPCloudGames.Games.Api.Commom.Interfaces;
 using FIAPCloudGames.Games.Api.Features.Games.Commands.Create;
 using FIAPCloudGames.Games.Api.Features.Games.Commands.Delete;
 using FIAPCloudGames.Games.Api.Features.Games.Commands.Update;
+using FIAPCloudGames.Games.Api.Features.Games.Models;
 using FIAPCloudGames.Games.Api.Features.Games.Queries.GetAll;
 using FIAPCloudGames.Games.Api.Features.Games.Queries.GetById;
 using FIAPCloudGames.Games.Api.Features.Games.Repositories;
 using FIAPCloudGames.Games.Api.Infrastructure.Persistence.Context;
 using FIAPCloudGames.Games.Api.Infrastructure.Persistence.Repositories;
+using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 
 namespace FIAPCloudGames.Games.Api;
 
@@ -28,6 +31,15 @@ public static class DependencyInjection
             .AddValidators();
 
         return services;
+    }
+
+    public static void ApplyMigrations(this WebApplication app)
+    {
+        using var scope = app.Services.CreateScope();
+
+        var dbContext = scope.ServiceProvider.GetRequiredService<GamesDbContext>();
+
+        dbContext.Database.Migrate();
     }
 
     private static IServiceCollection AddUseCases(this IServiceCollection services)

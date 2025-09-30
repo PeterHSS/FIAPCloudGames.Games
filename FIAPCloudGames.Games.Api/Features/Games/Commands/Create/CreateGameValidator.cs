@@ -1,7 +1,4 @@
-﻿using FIAPCloudGames.Games.Api.Features.Games.Commands;
-using FIAPCloudGames.Games.Application.DTOs;
-
-namespace FIAPCloudGames.Games.Api.Features.Games.Commands.Create;
+﻿namespace FIAPCloudGames.Games.Api.Features.Games.Commands.Create;
 
 public sealed class CreateGameValidator : AbstractGameValidator<CreateGameRequest>
 {
