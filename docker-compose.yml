@@ -1,0 +1,20 @@
+services:
+  fiapcloudgames.games.api:
+    image: ${DOCKER_REGISTRY-}fiapcloudgamesgamesapi
+    build:
+      context: .
+      dockerfile: FIAPCloudGames.Games.Api/Dockerfile
+
+  fiapcloudgames.games.postgres:
+    image: postgres:17-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=fgc_games
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
