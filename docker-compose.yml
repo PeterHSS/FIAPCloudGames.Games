@@ -1,9 +1,18 @@
+name: fgc-games
+
 services:
   fiapcloudgames.games.api:
     image: ${DOCKER_REGISTRY-}fiapcloudgamesgamesapi
     build:
       context: .
       dockerfile: FIAPCloudGames.Games.Api/Dockerfile
+    depends_on:
+     - fiapcloudgames.games.postgres
+    ports:
+      - "5002:8080"
+      - "5022:8081"
+    networks:
+      - fgc-network
 
   fiapcloudgames.games.postgres:
     image: postgres:17-alpine
@@ -14,7 +23,14 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - pgdata_games:/var/lib/postgresql/data
+    networks:
+      - fgc-network
 
 volumes:
-  pgdata:
+  pgdata_games:
+
+networks:
+    fgc-network:
+        external: true
+  
