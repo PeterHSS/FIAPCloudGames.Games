@@ -1,5 +1,7 @@
 ﻿using System.Reflection;
+using Carter;
 using FIAPCloudGames.Games.Api.Commom.Interfaces;
+using FIAPCloudGames.Games.Api.Commom.Middlewares;
 using FIAPCloudGames.Games.Api.Features.Games.Commands.ApplyPromotionToGames;
 using FIAPCloudGames.Games.Api.Features.Games.Commands.Create;
 using FIAPCloudGames.Games.Api.Features.Games.Commands.Delete;
@@ -7,9 +9,11 @@ using FIAPCloudGames.Games.Api.Features.Games.Commands.Update;
 using FIAPCloudGames.Games.Api.Features.Games.Models;
 using FIAPCloudGames.Games.Api.Features.Games.Queries.GetAll;
 using FIAPCloudGames.Games.Api.Features.Games.Queries.GetById;
+using FIAPCloudGames.Games.Api.Features.Games.Queries.GetGamesByIds;
 using FIAPCloudGames.Games.Api.Features.Games.Repositories;
 using FIAPCloudGames.Games.Api.Infrastructure.Persistence.Context;
 using FIAPCloudGames.Games.Api.Infrastructure.Persistence.Repositories;
+using FIAPCloudGames.Games.Api.Infrastructure.Services;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,7 +21,42 @@ namespace FIAPCloudGames.Games.Api;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddDependecyInjection(this IServiceCollection services, IConfiguration configuration)
+    {
+        services
+            .AddPresentation()
+            .AddApplication(configuration)
+            .AddInfrastructure(configuration);
+
+        return services;
+    }
+
+    private static IServiceCollection AddPresentation(this IServiceCollection services)
+    {
+        services.AddControllers();
+
+        services.AddEndpointsApiExplorer();
+            
+        services.AddSwaggerGen();
+
+        services.AddCarter();
+
+        services.AddProblemDetails(configure =>
+        {
+            configure.CustomizeProblemDetails = (context) =>
+            {
+                context.ProblemDetails.Extensions.TryAdd("requestId", context.HttpContext.TraceIdentifier);
+            };
+        });
+
+        services.AddExceptionHandler<ValidationExceptionHandlerMiddleware>();
+
+        services.AddExceptionHandler<GlobalExceptionHandlerMiddleware>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services
             .AddRepositories(configuration);
@@ -25,12 +64,24 @@ public static class DependencyInjection
         return services;
     }
 
-    public static IServiceCollection AddApplication(this IServiceCollection services)
+    private static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration configuration)
     {
         services
             .AddUseCases()
-            .AddValidators();
+            .AddValidators()
+            .AddHttpClients(configuration);
 
+        return services;
+    }
+
+    private static IServiceCollection AddHttpClients(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddHttpClient<IPromotionService, PromotionService> (HttpClient =>
+        {
+            string baseAddress = configuration.GetValue<string>("PromotionApi:BaseAddress")!;
+
+            HttpClient.BaseAddress = new Uri(baseAddress);
+        });
         return services;
     }
 
@@ -56,6 +107,8 @@ public static class DependencyInjection
         services.AddScoped<GetAllGamesUseCase>();
 
         services.AddScoped<ApplyPromotionToGamesUseCase>();
+
+        services.AddScoped<GetGamesByIdsUseCase>();
 
         return services;
     }

@@ -4,29 +4,7 @@ using FIAPCloudGames.Games.Api.Commom.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddProblemDetails(configure =>
-{
-    configure.CustomizeProblemDetails = (context) =>
-    {
-        context.ProblemDetails.Extensions.TryAdd("requestId", context.HttpContext.TraceIdentifier);   
-    };
-});
-
-builder.Services.AddExceptionHandler<ValidationExceptionHandlerMiddleware>();
-
-builder.Services.AddExceptionHandler<GlobalExceptionHandlerMiddleware>();
-
-builder.Services
-    .AddApplication()
-    .AddInfrastructure(builder.Configuration);
-
-builder.Services.AddControllers();
-
-builder.Services.AddEndpointsApiExplorer();
-
-builder.Services.AddSwaggerGen();
-
-builder.Services.AddCarter();   
+builder.Services.AddDependecyInjection(builder.Configuration);
 
 var app = builder.Build();
 
