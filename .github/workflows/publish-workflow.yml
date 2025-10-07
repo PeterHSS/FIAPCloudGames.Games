@@ -23,10 +23,10 @@ jobs:
           dotnet-version: "8.0.x"
 
       - name: Build
-        run: dotnet build FIAPCloudGames.Games.sln --configuration Release
+        run: dotnet build FiapCloudGames.Games.sln --configuration Release
 
       - name: Test
-        run: dotnet test FIAPCloudGames.Games.sln --configuration Release --no-build --verbosity normal
+        run: dotnet test FiapCloudGames.Games.sln --configuration Release --no-build --verbosity normal
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
