@@ -31,8 +31,6 @@ public class GameConfiguration : IEntityTypeConfiguration<Game>
 
         builder.Property(game => game.UpdatedAt);
 
-        builder.Property(game => game.PromotionId);
-
         builder.HasIndex(game => game.IsActive).HasDatabaseName("IX_Games_IsActive");
 
         builder.HasIndex(game => game.Genre).HasDatabaseName("IX_Games_Genre");

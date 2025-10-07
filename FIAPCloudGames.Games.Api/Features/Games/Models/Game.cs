@@ -12,7 +12,6 @@ public class Game
     public bool IsActive { get; private set; }
     public string Genre { get; private set; } = string.Empty;
     public DateTime? UpdatedAt { get; private set; }
-    public Guid? PromotionId { get; private set; }
 
     public static Game Create(string name, string description, DateTime releasedAt, decimal price, string genre)
     {
@@ -42,18 +41,6 @@ public class Game
         ReleasedAt = releasedAt;
         Price = price;
         Genre = genre;
-        UpdatedAt = DateTime.UtcNow;
-    }
-
-    public void ApplyPromotion(Guid promotionId)
-    {
-        PromotionId = promotionId;
-        UpdatedAt = DateTime.UtcNow;
-    }
-
-    public void RemovePromotion()
-    {
-        PromotionId = null;
         UpdatedAt = DateTime.UtcNow;
     }
 }

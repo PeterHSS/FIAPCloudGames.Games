@@ -2,7 +2,6 @@
 using Carter;
 using FIAPCloudGames.Games.Api.Commom.Interfaces;
 using FIAPCloudGames.Games.Api.Commom.Middlewares;
-using FIAPCloudGames.Games.Api.Features.Games.Commands.ApplyPromotionToGames;
 using FIAPCloudGames.Games.Api.Features.Games.Commands.Create;
 using FIAPCloudGames.Games.Api.Features.Games.Commands.Delete;
 using FIAPCloudGames.Games.Api.Features.Games.Commands.Update;
@@ -105,8 +104,6 @@ public static class DependencyInjection
         services.AddScoped<DeleteGameUseCase>();
 
         services.AddScoped<GetAllGamesUseCase>();
-
-        services.AddScoped<ApplyPromotionToGamesUseCase>();
 
         services.AddScoped<GetGamesByIdsUseCase>();
 
