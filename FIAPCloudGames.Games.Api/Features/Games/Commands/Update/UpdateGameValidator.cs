@@ -1,6 +1,4 @@
-﻿using FIAPCloudGames.Games.Api.Features.Games.Commands;
-
-namespace FIAPCloudGames.Games.Api.Features.Games.Commands.Update;
+﻿namespace FIAPCloudGames.Games.Api.Features.Games.Commands.Update;
 
 public sealed class UpdateGameValidator : AbstractGameValidator<UpdateGameRequest>
 {

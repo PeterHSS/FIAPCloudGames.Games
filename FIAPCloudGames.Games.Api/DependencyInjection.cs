@@ -1,9 +1,11 @@
 ﻿using System.Reflection;
 using Carter;
+using Elastic.Clients.Elasticsearch;
 using FIAPCloudGames.Games.Api.Commom.Interfaces;
 using FIAPCloudGames.Games.Api.Commom.Middlewares;
 using FIAPCloudGames.Games.Api.Features.Games.Commands.Create;
 using FIAPCloudGames.Games.Api.Features.Games.Commands.Delete;
+using FIAPCloudGames.Games.Api.Features.Games.Commands.Recomendation;
 using FIAPCloudGames.Games.Api.Features.Games.Commands.Update;
 using FIAPCloudGames.Games.Api.Features.Games.Models;
 using FIAPCloudGames.Games.Api.Features.Games.Queries.GetAll;
@@ -13,6 +15,8 @@ using FIAPCloudGames.Games.Api.Features.Games.Repositories;
 using FIAPCloudGames.Games.Api.Infrastructure.Persistence.Context;
 using FIAPCloudGames.Games.Api.Infrastructure.Persistence.Repositories;
 using FIAPCloudGames.Games.Api.Infrastructure.Services;
+using FIAPCloudGames.Games.Api.Infrastructure.Services.Elasticsearch;
+using FIAPCloudGames.Games.Api.Infrastructure.Settings;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
@@ -35,7 +39,7 @@ public static class DependencyInjection
         services.AddControllers();
 
         services.AddEndpointsApiExplorer();
-            
+
         services.AddSwaggerGen();
 
         services.AddCarter();
@@ -55,10 +59,19 @@ public static class DependencyInjection
         return services;
     }
 
+    private static IServiceCollection AddServices(this IServiceCollection services)
+    {
+        services.AddSingleton<IElasticService, ElasticService>();
+
+        return services;
+    }
+
     private static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services
-            .AddRepositories(configuration);
+            .AddServices()
+            .AddRepositories(configuration)
+            .AddSettings(configuration);
 
         return services;
     }
@@ -75,7 +88,7 @@ public static class DependencyInjection
 
     private static IServiceCollection AddHttpClients(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddHttpClient<IPromotionService, PromotionService> (HttpClient =>
+        services.AddHttpClient<IPromotionService, PromotionService>(HttpClient =>
         {
             string baseAddress = configuration.GetValue<string>("PromotionApi:BaseAddress")!;
 
@@ -107,6 +120,8 @@ public static class DependencyInjection
 
         services.AddScoped<GetGamesByIdsUseCase>();
 
+        services.AddScoped<GameRecommendationUseCase>();
+
         return services;
     }
 
@@ -124,6 +139,13 @@ public static class DependencyInjection
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddScoped<IGameRepository, GameRepository>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddSettings(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<ElasticSettings>(configuration.GetSection(ElasticSettings.SectionName));
 
         return services;
     }
