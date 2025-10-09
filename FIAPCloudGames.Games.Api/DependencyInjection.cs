@@ -80,23 +80,10 @@ public static class DependencyInjection
     {
         services
             .AddUseCases()
-            .AddValidators()
-            .AddHttpClients(configuration);
+            .AddValidators();
 
         return services;
     }
-
-    private static IServiceCollection AddHttpClients(this IServiceCollection services, IConfiguration configuration)
-    {
-        services.AddHttpClient<IPromotionService, PromotionService>(HttpClient =>
-        {
-            string baseAddress = configuration.GetValue<string>("PromotionApi:BaseAddress")!;
-
-            HttpClient.BaseAddress = new Uri(baseAddress);
-        });
-        return services;
-    }
-
     public static void ApplyMigrations(this WebApplication app)
     {
         using var scope = app.Services.CreateScope();
