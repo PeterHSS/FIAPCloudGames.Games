@@ -7,8 +7,6 @@ on:
 
 env:
   DOCKERHUB_REPOSITORY: klurgs/fgc-games
-  CONTAINER_APP_NAME: fgc-games
-  RESOURCE_GROUP: fgc-rg
 
 jobs:
   build-and-deploy:
@@ -41,19 +39,11 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: ${{ env.DOCKERHUB_REPOSITORY }}:${{ github.sha }}
+          tags: |
+            ${{ env.DOCKERHUB_REPOSITORY }}:${{ github.sha }}
+            ${{ env.DOCKERHUB_REPOSITORY }}:latest
           file: FIAPCloudGames.Games.Api/Dockerfile
 
-      - name: Azure Login
-        uses: azure/login@v2
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Deploy to Azure Container Apps
-        uses: azure/container-apps-deploy-action@v1
-        with:
-          imageToDeploy: ${{ env.DOCKERHUB_REPOSITORY }}:${{ github.sha }}
-          resourceGroup: ${{ env.RESOURCE_GROUP }}
-          containerAppName: ${{ env.CONTAINER_APP_NAME }}
-          environmentVariables: |
-            ASPNETCORE_ENVIRONMENT=Development
+
+
