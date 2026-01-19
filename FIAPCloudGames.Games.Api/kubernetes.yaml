@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: Service
+metadata: 
+  name: fiapcloudgames-games-api
+  namespace: fgc
+spec: 
+  selector:
+    app:  fiapcloudgames-games-api
+  ports:
+    - protocol: TCP
+      port:  80
+      targetPort: 8080
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fiapcloudgames-games-api
+  namespace: fgc
+spec:
+  replicas:  2
+  selector:
+    matchLabels:
+      app:  fiapcloudgames-games-api
+  template:
+    metadata:
+      labels:
+        app: fiapcloudgames-games-api
+    spec: 
+      containers:
+        - name: fiapcloudgames-games-api
+          image: klurgs/fgc-games:latest
+          imagePullPolicy: Always
+          ports: 
+            - containerPort: 8080
+          resources:
+            requests: 
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: fiapcloudgames-games-api-hpa
+  namespace: fgc
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name:  fiapcloudgames-games-api
+  minReplicas: 2
+  maxReplicas: 10
+  metrics: 
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type:  Utilization
+          averageUtilization: 70
