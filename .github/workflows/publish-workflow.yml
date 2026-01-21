@@ -34,10 +34,10 @@ jobs:
           dotnet-version: "8.0.x"
 
       - name: Build
-        run: dotnet build FIAPCloudGames.Games.sln --configuration Release
+        run: dotnet build FiapCloudGames.Games.sln --configuration Release
 
       - name: Test
-        run: dotnet test FIAPCloudGames.Games.sln --configuration Release --no-build
+        run: dotnet test FiapCloudGames.Games.sln --configuration Release --no-build
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -65,5 +65,5 @@ jobs:
         run: |
           export IMAGE=${{ env.DOCKERHUB_REPOSITORY }}:${{ github.sha }}
           kubectl create namespace ${{ env.K8S_NAMESPACE }} --dry-run=client -o yaml | kubectl apply -f -
-          envsubst < FIAPCloudGames.Games.Api/kubernetes.yaml | kubectl apply -f -
+          envsubst < FiapCloudGames.Games.Api/kubernetes.yaml | kubectl apply -f -
           kubectl rollout status deployment/fiapcloudgames-games-api -n ${{ env.K8S_NAMESPACE }}
