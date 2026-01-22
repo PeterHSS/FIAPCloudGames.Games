@@ -11,6 +11,8 @@ public sealed class GamesDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.HasDefaultSchema("games");
+
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(GamesDbContext).Assembly);
     }
 }

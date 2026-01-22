@@ -8,7 +8,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace FIAPCloudGames.Games.Infrastructure.Persistence.Migrations
+namespace FIAPCloudGames.Games.Api.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(GamesDbContext))]
     partial class GamesDbContextModelSnapshot : ModelSnapshot
@@ -17,6 +17,7 @@ namespace FIAPCloudGames.Games.Infrastructure.Persistence.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasDefaultSchema("games")
                 .HasAnnotation("ProductVersion", "9.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
@@ -68,7 +69,7 @@ namespace FIAPCloudGames.Games.Infrastructure.Persistence.Migrations
                     b.HasIndex("IsActive")
                         .HasDatabaseName("IX_Games_IsActive");
 
-                    b.ToTable("Games", (string)null);
+                    b.ToTable("Games", "games");
                 });
 #pragma warning restore 612, 618
         }
