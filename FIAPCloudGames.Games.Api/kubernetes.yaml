@@ -27,9 +27,6 @@ spec:
         env:
         - name: ASPNETCORE_ENVIRONMENT
           value: "Production"
-        # Adicione outras variáveis de ambiente necessárias
-        # - name: DATABASE_CONNECTION
-        #   value: "sua-connection-string"
         resources:
           requests:
             cpu: 100m
