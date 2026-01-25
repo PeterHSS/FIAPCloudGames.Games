@@ -10,6 +10,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDependecyInjection(builder.Configuration);
 
+builder.Host.AddSerilog();
+
 builder.Logging.AddOpenTelemetry(logging =>
 {
     logging.IncludeScopes = true;

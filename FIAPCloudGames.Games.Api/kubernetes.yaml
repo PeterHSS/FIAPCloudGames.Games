@@ -27,6 +27,11 @@ spec:
         env:
         - name: ASPNETCORE_ENVIRONMENT
           value: "Production"
+        envFrom:
+        - configMapRef:
+            name: fgc-app-config 
+        - secretRef:
+            name: fgc-app-secrets
         resources:
           requests:
             cpu: 100m

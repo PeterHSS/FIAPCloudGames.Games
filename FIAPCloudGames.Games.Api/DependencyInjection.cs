@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using Carter;
-using Elastic.Clients.Elasticsearch;
 using FIAPCloudGames.Games.Api.Commom.Interfaces;
 using FIAPCloudGames.Games.Api.Commom.Middlewares;
 using FIAPCloudGames.Games.Api.Features.Games.Commands.Create;
@@ -14,11 +13,12 @@ using FIAPCloudGames.Games.Api.Features.Games.Queries.GetGamesByIds;
 using FIAPCloudGames.Games.Api.Features.Games.Repositories;
 using FIAPCloudGames.Games.Api.Infrastructure.Persistence.Context;
 using FIAPCloudGames.Games.Api.Infrastructure.Persistence.Repositories;
-using FIAPCloudGames.Games.Api.Infrastructure.Services;
 using FIAPCloudGames.Games.Api.Infrastructure.Services.Elasticsearch;
 using FIAPCloudGames.Games.Api.Infrastructure.Settings;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
+using Serilog.Sinks.OpenSearch;
 
 namespace FIAPCloudGames.Games.Api;
 
@@ -135,5 +135,43 @@ public static class DependencyInjection
         services.Configure<ElasticSettings>(configuration.GetSection(ElasticSettings.SectionName));
 
         return services;
+    }
+
+    public static IHostBuilder AddSerilog(this IHostBuilder hostBuilder)
+    {
+        hostBuilder.UseSerilog((context, configuration) =>
+        {
+            Serilog.Debugging.SelfLog.Enable(msg => Console.WriteLine(msg));
+
+            configuration.WriteTo.Console(restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Information);
+
+            configuration.MinimumLevel.Information();
+
+            configuration
+                .MinimumLevel.Override("Microsoft.AspNetCore", Serilog.Events.LogEventLevel.Error)
+                .MinimumLevel.Override("Microsoft", Serilog.Events.LogEventLevel.Error)
+                .MinimumLevel.Override("System", Serilog.Events.LogEventLevel.Error);
+
+            configuration
+                .Enrich.FromLogContext()
+                .Enrich.WithMachineName()
+                .Enrich.WithProcessName()
+                .Enrich.WithThreadId()
+                .Enrich.WithThreadName()
+                .Enrich.WithEnvironmentName()
+                .Enrich.WithProperty("Application", "FIAPCloudGames.Games.Api");
+
+            configuration.WriteTo.OpenSearch(new OpenSearchSinkOptions(new Uri(context.Configuration["Opensearch:Host"]!))
+            {
+                AutoRegisterTemplate = true,
+                IndexFormat = "fgc-games-api-{0:yyyy.MM.dd}",
+                ModifyConnectionSettings = conn =>
+                    conn
+                        .ServerCertificateValidationCallback((o, certificate, chain, errors) => true)
+                        .BasicAuthentication(context.Configuration["Opensearch:Username"], context.Configuration["Opensearch:Password"])
+            });
+        });
+
+        return hostBuilder;
     }
 }
